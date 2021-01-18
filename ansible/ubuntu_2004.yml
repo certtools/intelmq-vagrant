@@ -1,0 +1,8 @@
+- name: Add apt key
+  apt_key:
+    url: https://download.opensuse.org/repositories/home:sebix:intelmq:/unstable/xUbuntu_20.04/Release.key
+    state: present
+- name: Setup APT repository Ubuntu 20.04
+  apt_repository:
+    repo: deb http://download.opensuse.org/repositories/home:/sebix:/intelmq:/unstable/xUbuntu_20.04/ /
+    state: present

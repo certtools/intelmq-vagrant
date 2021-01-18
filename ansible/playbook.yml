@@ -10,15 +10,18 @@
       apt:
         update-cache: yes
         name: gpg
-    - name: Add apt key
-      apt_key:
-        url: https://download.opensuse.org/repositories/home:sebix:intelmq:/unstable/xUbuntu_20.04/Release.key
-        state: present
-    - name: Setup APT repository
-      apt_repository:
-        repo: deb http://download.opensuse.org/repositories/home:/sebix:/intelmq:/unstable/xUbuntu_20.04/ /
-        state: present
+    - name: Setup Debian 10
+      include: debian_10.yml
+      when: ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_version'] == "10"
+    - name: Setup Ubuntu 18.04
+      include: ubuntu_1804.yml
+      when: ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_version'] == "18.04"
+    - name: Setup Ubuntu 20.04
+      include: ubuntu_2004.yml
+      when: ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_version'] == "20.04"
     - name: Install packages
       apt:
         update-cache: yes
-        name: python3-intelmq-api
+        pkg:
+          - python3-intelmq-api
+          - apache2
