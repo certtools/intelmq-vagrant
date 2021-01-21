@@ -24,4 +24,5 @@
         update-cache: yes
         pkg:
           - python3-intelmq-api
+          - intelmq-manager
           - apache2
