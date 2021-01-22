@@ -1,4 +1,4 @@
-FOLDERS := $(shell ls | grep -v 'Makefile\|ansible\|.log')
+FOLDERS := debian-buster ubuntu-18.04 ubuntu-20.04
 RM	:= rm -f
 
 .PHONY: $(FOLDERS) clean
