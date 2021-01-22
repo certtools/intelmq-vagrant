@@ -1,11 +1,6 @@
 - hosts: all
   become: yes
   tasks:
-    #- name: Run apt upgrade
-    #  apt:
-    #    upgrade: "yes"
-    #    update_cache: yes
-    #    cache_valid_time: 432000
     - name: Install gnupg
       apt:
         update-cache: yes
@@ -26,3 +21,19 @@
           - python3-intelmq-api
           - intelmq-manager
           - apache2
+    - command: intelmqctl status file-output
+      register: intelmqctlstatusfileoutput
+      ignore_errors: yes
+    - assert:
+        that: "'Bot file-output is stopped.' in intelmqctlstatusfileoutput.stdout"
+    - command: intelmqctl start file-output
+      register: intelmqctlstartfileoutput
+    - command: intelmqctl status file-output
+      register: intelmqctlstatusfileoutput
+      ignore_errors: yes
+    - assert:
+        that: "'Bot file-output is running.' in intelmqctlstatusfileoutput.stdout"
+    - command: curl http://localhost/intelmq/v1/api/queues
+      register: curlapiqueues
+    - assert:
+        that: "'{{ lookup('file', '../assets/00_queues') }}' in curlapiqueues.stdout"
