@@ -1,10 +1,12 @@
 - hosts: all
   become: yes
   tasks:
-    - name: Install gnupg
+    - name: Install packages
       apt:
         update-cache: yes
-        name: gpg
+        pkg:
+          - gpg
+          - curl
     - name: Setup Debian 10
       include: debian_10.yml
       when: ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_version'] == "10"
