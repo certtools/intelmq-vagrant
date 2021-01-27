@@ -35,7 +35,31 @@
       ignore_errors: yes
     - assert:
         that: "'Bot file-output is running.' in intelmqctlstatusfileoutput.stdout"
+
+# API related tests
     - command: curl http://localhost/intelmq/v1/api/queues
       register: curlapiqueues
     - assert:
         that: "'{{ lookup('file', '../assets/00_queues') }}' in curlapiqueues.stdout"
+    - command: curl http://localhost/intelmq/v1/api/bot/?id=gethostbyname-1-expert&action=status
+      register: curlapibotstatus
+    - assert:
+        that: "'stopped' in curlapibotstatus.stdout"
+    - command: curl http://localhost/intelmq/v1/api/check
+      register: curlapicheck
+    - assert:
+        that: "'\"status\": \"success\"' in curlapicheck.stdout"
+
+# manager related tests:
+    - command: curl http://localhost/intelmq-manager/
+      register: curlmanager
+    - assert:
+        that: "'<title>IntelMQ Manager</title>' in curlmanager.stdout"
+    - assert:
+        that: "'<div id=\"login-status\">Not logged in</div>' in curlmanager.stdout"
+    - command: curl http://localhost/intelmq-manager/about.html
+      register: curlmanagerabout
+    - assert:
+        that: "'community driven initiative called <strong>IHAP</strong>' in curlmanagerabout.stdout"
+    - assert:
+        that: "'s design was influenced by' in curlmanagerabout.stdout"
