@@ -6,7 +6,6 @@
         update-cache: yes
         pkg:
           - gpg
-          - curl
     - name: Prepare Debian and Ubuntu
       include: debian_based.yml
       when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu"
@@ -38,31 +37,73 @@
       ignore_errors: yes
     - assert:
         that: "'Bot file-output is running.' in intelmqctlstatusfileoutput.stdout"
+    - command: intelmqctl stop file-output
 
 # API related tests
-    - command: curl http://localhost/intelmq/v1/api/queues
+    - name: Register auth
+      uri:
+        url: http://localhost/intelmq/v1/api/login/
+        body_format: json
+        method: POST
+        body:
+          username: admin
+          password: asdf
+      register: auth
+
+    - uri:
+        url: http://localhost/intelmq/v1/api/queues
+        status_code: [401]
+        return_content: yes
+      register: queuesnoauth
+    - name: Check if authentication works
+      assert:
+        that: "'{\"errors\": {\"Authentication Required\": \"Please provide valid Token verification credentials\"}}' in queuesnoauth.content"
+
+    - uri:
+        url: http://localhost/intelmq/v1/api/queues
+        return_content: yes
+        headers:
+          Authorization: '{{ auth.json.login_token }}'
       register: curlapiqueues
-    - assert:
-        that: "'{{ lookup('file', '../assets/00_queues') }}' in curlapiqueues.stdout"
-    - command: curl http://localhost/intelmq/v1/api/bot/?id=gethostbyname-1-expert&action=status
-      register: curlapibotstatus
-    - assert:
-        that: "'stopped' in curlapibotstatus.stdout"
-    - command: curl http://localhost/intelmq/v1/api/check
-      register: curlapicheck
-    - assert:
-        that: "'\"status\": \"success\"' in curlapicheck.stdout"
+    - name: Check queue status via API
+      assert:
+        that: "'{{ lookup('file', '../assets/00_queues') }}' in curlapiqueues.content"
+
+    - uri:
+        url: http://localhost/intelmq/v1/api/bot/?id=gethostbyname-1-expert&action=status
+        return_content: yes
+        headers:
+          Authorization: '{{ auth.json.login_token }}'
+      register: apibotstatus
+    - name: Check bot status via API
+      assert:
+        that: "'stopped' in apibotstatus.content"
+
+    - uri:
+        url: http://localhost/intelmq/v1/api/check
+        return_content: yes
+        headers:
+          Authorization: '{{ auth.json.login_token }}'
+      register: apicheck
+    - name: Check API check
+      assert:
+        that: "'\"status\": \"success\"' in apicheck.content"
 
 # manager related tests:
-    - command: curl http://localhost/intelmq-manager/
-      register: curlmanager
+    - uri:
+        url: http://localhost/intelmq-manager/
+        return_content: yes
+      register: manager
     - assert:
-        that: "'<title>IntelMQ Manager</title>' in curlmanager.stdout"
+        that: "'<title>IntelMQ Manager</title>' in manager.content"
     - assert:
-        that: "'<div id=\"login-status\">Not logged in</div>' in curlmanager.stdout"
-    - command: curl http://localhost/intelmq-manager/about.html
-      register: curlmanagerabout
+        that: "'<div id=\"login-status\">Not logged in</div>' in manager.content"
+
+    - uri:
+        url: http://localhost/intelmq-manager/about.html
+        return_content: yes
+      register: managerabout
     - assert:
-        that: "'community driven initiative called <strong>IHAP</strong>' in curlmanagerabout.stdout"
+        that: "'community driven initiative called <strong>IHAP</strong>' in managerabout.content"
     - assert:
-        that: "'s design was influenced by' in curlmanagerabout.stdout"
+        that: "'s design was influenced by' in managerabout.content"
