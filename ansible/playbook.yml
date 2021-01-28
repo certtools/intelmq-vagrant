@@ -7,6 +7,9 @@
         pkg:
           - gpg
           - curl
+    - name: Prepare Debian and Ubuntu
+      include: debian_based.yml
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu"
     - name: Setup Debian 10
       include: debian_10.yml
       when: ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_version'] == "10"
