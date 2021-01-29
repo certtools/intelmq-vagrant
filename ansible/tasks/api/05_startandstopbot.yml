@@ -1,0 +1,24 @@
+- uri:
+    url: http://localhost/intelmq/v1/api/bot/?id=taxonomy-expert&action=start
+    return_content: yes
+    headers:
+      Authorization: '{{ auth.json.login_token }}'
+  register: apibotstart
+- name: Check bot start via API
+  assert:
+    that: "'running' in apibotstart.content"
+- command: intelmqctl status taxonomy-expert
+  register: intelmqctlstatustaxonomyexpert
+  ignore_errors: yes
+- assert:
+    that: "'Bot taxonomy-expert is running.' in intelmqctlstatustaxonomyexpert.stdout"
+- uri:
+    url: http://localhost/intelmq/v1/api/bot/?id=taxonomy-expert&action=stop
+    return_content: yes
+    headers:
+      Authorization: '{{ auth.json.login_token }}'
+  register: apibotstop
+- name: Check bot stop via API
+  assert:
+    that: "'stopped' in apibotstop.content"
+

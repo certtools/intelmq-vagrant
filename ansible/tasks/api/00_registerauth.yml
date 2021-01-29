@@ -1,0 +1,9 @@
+- name: Register auth
+  uri:
+    url: http://localhost/intelmq/v1/api/login/
+    body_format: json
+    method: POST
+    body:
+      username: admin
+      password: asdf
+  register: auth

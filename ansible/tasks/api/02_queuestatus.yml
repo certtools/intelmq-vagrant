@@ -1,0 +1,9 @@
+- uri:
+    url: http://localhost/intelmq/v1/api/queues
+    return_content: yes
+    headers:
+      Authorization: '{{ auth.json.login_token }}'
+  register: curlapiqueues
+- name: Check queue status via API
+  assert:
+    that: "'{{ lookup('file', '../assets/00_queues') }}' in curlapiqueues.content"

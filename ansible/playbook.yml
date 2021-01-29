@@ -25,85 +25,31 @@
           - python3-intelmq-api
           - intelmq-manager
           - apache2
-    - command: intelmqctl status file-output
-      register: intelmqctlstatusfileoutput
-      ignore_errors: yes
-    - assert:
-        that: "'Bot file-output is stopped.' in intelmqctlstatusfileoutput.stdout"
-    - command: intelmqctl start file-output
-      register: intelmqctlstartfileoutput
-    - command: intelmqctl status file-output
-      register: intelmqctlstatusfileoutput
-      ignore_errors: yes
-    - assert:
-        that: "'Bot file-output is running.' in intelmqctlstatusfileoutput.stdout"
-    - command: intelmqctl stop file-output
+
+# CLI related tests
+#
+# Those tests run intelmqctl
+#
+    - name: Run Manager tests
+      include: "{{ item }}"
+      with_fileglob:
+        - "tasks/cli/*.yml"
 
 # API related tests
-    - name: Register auth
-      uri:
-        url: http://localhost/intelmq/v1/api/login/
-        body_format: json
-        method: POST
-        body:
-          username: admin
-          password: asdf
-      register: auth
+#
+# Those tests access the intelmq-api and manage the botnet
+# Most of them depend on the 00_registerauth.yml task that provides the authentication token
+#
+    - name: Run API tests
+      include: "{{ item }}"
+      with_fileglob:
+        - "tasks/api/*.yml"
 
-    - uri:
-        url: http://localhost/intelmq/v1/api/queues
-        status_code: [401]
-        return_content: yes
-      register: queuesnoauth
-    - name: Check if authentication works
-      assert:
-        that: "'{\"errors\": {\"Authentication Required\": \"Please provide valid Token verification credentials\"}}' in queuesnoauth.content"
-
-    - uri:
-        url: http://localhost/intelmq/v1/api/queues
-        return_content: yes
-        headers:
-          Authorization: '{{ auth.json.login_token }}'
-      register: curlapiqueues
-    - name: Check queue status via API
-      assert:
-        that: "'{{ lookup('file', '../assets/00_queues') }}' in curlapiqueues.content"
-
-    - uri:
-        url: http://localhost/intelmq/v1/api/bot/?id=gethostbyname-1-expert&action=status
-        return_content: yes
-        headers:
-          Authorization: '{{ auth.json.login_token }}'
-      register: apibotstatus
-    - name: Check bot status via API
-      assert:
-        that: "'stopped' in apibotstatus.content"
-
-    - uri:
-        url: http://localhost/intelmq/v1/api/check
-        return_content: yes
-        headers:
-          Authorization: '{{ auth.json.login_token }}'
-      register: apicheck
-    - name: Check API check
-      assert:
-        that: "'\"status\": \"success\"' in apicheck.content"
-
-# manager related tests:
-    - uri:
-        url: http://localhost/intelmq-manager/
-        return_content: yes
-      register: manager
-    - assert:
-        that: "'<title>IntelMQ Manager</title>' in manager.content"
-    - assert:
-        that: "'<div id=\"login-status\">Not logged in</div>' in manager.content"
-
-    - uri:
-        url: http://localhost/intelmq-manager/about.html
-        return_content: yes
-      register: managerabout
-    - assert:
-        that: "'community driven initiative called <strong>IHAP</strong>' in managerabout.content"
-    - assert:
-        that: "'s design was influenced by' in managerabout.content"
+# Manager related tests
+#
+# Those tests access the intelmq-manager webinterface
+#
+    - name: Run Manager tests
+      include: "{{ item }}"
+      with_fileglob:
+        - "tasks/manager/*.yml"

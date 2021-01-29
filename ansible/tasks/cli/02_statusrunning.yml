@@ -1,0 +1,8 @@
+- command: intelmqctl start file-output
+  register: intelmqctlstartfileoutput
+- command: intelmqctl status file-output
+  register: intelmqctlstatusfileoutput
+  ignore_errors: yes
+- assert:
+    that: "'Bot file-output is running.' in intelmqctlstatusfileoutput.stdout"
+- command: intelmqctl stop file-output

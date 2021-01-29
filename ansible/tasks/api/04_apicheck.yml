@@ -1,0 +1,9 @@
+- uri:
+    url: http://localhost/intelmq/v1/api/check
+    return_content: yes
+    headers:
+      Authorization: '{{ auth.json.login_token }}'
+  register: apicheck
+- name: Check API check
+  assert:
+    that: "'\"status\": \"success\"' in apicheck.content"

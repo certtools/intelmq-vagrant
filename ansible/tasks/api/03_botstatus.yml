@@ -1,0 +1,9 @@
+- uri:
+    url: http://localhost/intelmq/v1/api/bot/?id=gethostbyname-1-expert&action=status
+    return_content: yes
+    headers:
+      Authorization: '{{ auth.json.login_token }}'
+  register: apibotstatus
+- name: Check bot status via API
+  assert:
+    that: "'stopped' in apibotstatus.content"

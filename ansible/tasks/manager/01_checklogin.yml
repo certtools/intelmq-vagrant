@@ -1,0 +1,8 @@
+- uri:
+    url: http://localhost/intelmq-manager/
+    return_content: yes
+  register: manager
+- assert:
+    that: "'<title>IntelMQ Manager</title>' in manager.content"
+- assert:
+    that: "'<div id=\"login-status\">Not logged in</div>' in manager.content"

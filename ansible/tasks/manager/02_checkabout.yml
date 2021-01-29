@@ -1,0 +1,8 @@
+- uri:
+    url: http://localhost/intelmq-manager/about.html
+    return_content: yes
+  register: managerabout
+- assert:
+    that: "'community driven initiative called <strong>IHAP</strong>' in managerabout.content"
+- assert:
+    that: "'s design was influenced by' in managerabout.content"

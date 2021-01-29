@@ -1,0 +1,8 @@
+- uri:
+    url: http://localhost/intelmq/v1/api/queues
+    status_code: [401]
+    return_content: yes
+  register: queuesnoauth
+- name: Check if authentication works
+  assert:
+    that: "'{\"errors\": {\"Authentication Required\": \"Please provide valid Token verification credentials\"}}' in queuesnoauth.content"
