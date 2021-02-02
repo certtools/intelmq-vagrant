@@ -25,6 +25,15 @@
           - python3-intelmq-api
           - intelmq-manager
           - apache2
+    - name: Copy runtime.conf
+      copy:
+        src: '../assets/runtime.conf'
+        dest: '/etc/intelmq/runtime.conf'
+    - name: Copy pipeline.conf
+      copy:
+        src: '../assets/pipeline.conf'
+        dest: '/etc/intelmq/pipeline.conf'
+
 
 # CLI related tests
 #
