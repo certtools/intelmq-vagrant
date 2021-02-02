@@ -1,0 +1,26 @@
+- lineinfile:
+    path: /assets/foo.txt
+    create: true
+    line: foobar
+- command: intelmqctl start file-output
+- command: intelmqctl start file-input
+  ignore_errors: yes
+- command: intelmqctl stop file-output
+- slurp:
+    src: /var/lib/intelmq/bots/file-output/events.txt
+  register: events
+- assert:
+  # The output of the slurp command apparently gets parsed as a python dict, so we can't just
+  # compare the string. Therefore there are multiple asserts:
+    that: 
+      - "{{ events['content'] | b64decode }}['extra.file_name'] == 'foo.txt'"
+      - "{{ events['content'] | b64decode }}['feed.accuracy'] == 100.0"
+      - "{{ events['content'] | b64decode }}['feed.url'] == 'file://localhost/assets/foo.txt'"
+      - "'time.observation' in  {{ events['content'] | b64decode }}"
+- name: Clean up
+  file:
+    state: absent
+    path: "{{ item }}"
+  with_items:
+    - /assets/foo.txt
+    - /var/lib/intelmq/bots/file-output/events.txt
