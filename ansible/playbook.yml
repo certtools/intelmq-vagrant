@@ -41,8 +41,7 @@
 #
     - name: Run Manager tests
       include: "{{ item }}"
-      with_fileglob:
-        - "tasks/cli/*.yml"
+      loop: "{{ query('fileglob', 'tasks/cli/*.yml') | sort }}"
 
 # API related tests
 #
@@ -51,8 +50,7 @@
 #
     - name: Run API tests
       include: "{{ item }}"
-      with_fileglob:
-        - "tasks/api/*.yml"
+      loop: "{{ query('fileglob', 'tasks/api/*.yml') | sort }}"
 
 # Manager related tests
 #
@@ -60,5 +58,4 @@
 #
     - name: Run Manager tests
       include: "{{ item }}"
-      with_fileglob:
-        - "tasks/manager/*.yml"
+      loop: "{{ query('fileglob', 'tasks/manager/*.yml') | sort }}"
