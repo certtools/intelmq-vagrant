@@ -1,0 +1,69 @@
+- lineinfile:
+    path: /assets/api_06_fileinputoutput.txt
+    create: true
+    line: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+# start fileoutput and check status
+- uri:
+    url: http://localhost/intelmq/v1/api/bot/?id=file-output&action=start
+    return_content: yes
+    headers:
+      Authorization: '{{ auth.json.login_token }}'
+  register: apibotstart
+- name: Check bot start via API
+  assert:
+    that: "'running' in apibotstart.content"
+- command: intelmqctl status file-output
+  register: intelmqctlstatus
+  ignore_errors: yes
+- assert:
+    that: "'Bot file-output is running.' in intelmqctlstatus.stdout"
+
+# start fileinput and check status
+- uri:
+    url: http://localhost/intelmq/v1/api/bot/?id=file-input&action=start
+    return_content: yes
+    headers:
+      Authorization: '{{ auth.json.login_token }}'
+  register: apibotstart
+- name: Check bot start via API
+  assert:
+    that: "'stopped' in apibotstart.content"
+- command: intelmqctl status file-input
+  register: intelmqctlstatus
+  ignore_errors: yes
+- assert:
+    that: "'Bot file-input is stopped.' in intelmqctlstatus.stdout"
+
+# stop fileoutput and check status
+- uri:
+    url: http://localhost/intelmq/v1/api/bot/?id=file-output&action=stop
+    return_content: yes
+    headers:
+      Authorization: '{{ auth.json.login_token }}'
+  register: apibotstop
+- name: Check bot stop via API
+  assert:
+    that: "'stopped' in apibotstop.content"
+
+- slurp:
+    src: /var/lib/intelmq/bots/file-output/events.txt
+  register: events
+- assert:
+  # The output of the slurp command apparently gets parsed as a python dict, so we can't just
+  # compare the string. Therefore there are multiple asserts:
+    that: 
+      - "{{ events['content'] | b64decode }}['extra.file_name'] == 'api_06_fileinputoutput.txt'"
+      - "{{ events['content'] | b64decode }}['feed.accuracy'] == 100.0"
+      - "{{ events['content'] | b64decode }}['feed.url'] == 'file://localhost/assets/api_06_fileinputoutput.txt'"
+      - "'time.observation' in  {{ events['content'] | b64decode }}"
+
+- name: Clean up
+  file:
+    state: absent
+    path: "{{ path }}"
+  loop:
+    - /assets/api_06_fileinputoutput.txt
+    - /var/lib/intelmq/bots/file-output/events.txt
+  loop_control:
+    loop_var: path
