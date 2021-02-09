@@ -1,5 +1,7 @@
-- command: intelmqctl status file-output
+- name: Run intelmqctl status file-output
+  command: intelmqctl status file-output
   register: intelmqctlstatusfileoutput
   ignore_errors: yes
-- assert:
+- name: Checkout output of command
+  assert:
     that: "'Bot file-output is stopped.' in intelmqctlstatusfileoutput.stdout"
