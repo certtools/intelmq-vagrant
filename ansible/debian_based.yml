@@ -1,3 +1,8 @@
+- name: Install gpg
+  apt:
+    update-cache: yes
+    pkg:
+      - gpg
 - name: Set user for IntelMQ API
   debconf:
     name: intelmq-api
@@ -16,3 +21,9 @@
     question: intelmq-api/password-repeat
     value: asdf
     vtype: password
+- name: Set webserver service name
+  set_fact:
+    webserver: apache2
+- name: Install apache2 webserver
+  package:
+    name: apache2
