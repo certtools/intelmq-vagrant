@@ -53,7 +53,7 @@
 #
 # Those tests run intelmqctl
 #
-    - name: Run Manager tests
+    - name: Run CLI tests
       include: "{{ item }}"
       loop: "{{ query('fileglob', 'tasks/cli/*.yml') | sort }}"
 
