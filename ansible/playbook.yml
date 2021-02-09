@@ -22,7 +22,7 @@
       apt:
         update-cache: yes
         pkg:
-          - python3-intelmq-api
+          - intelmq-api
           - intelmq-manager
           - apache2
     - name: Copy runtime.conf
