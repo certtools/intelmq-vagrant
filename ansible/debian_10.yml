@@ -1,21 +1,3 @@
-- name: Set user for IntelMQ API
-  debconf:
-    name: python3-intelmq-api
-    question: intelmq-api/user
-    value: admin
-    vtype: string
-- name: Set password for IntelMQ API
-  debconf:
-    name: python3-intelmq-api
-    question: intelmq-api/password
-    value: asdf
-    vtype: password
-- name: Set password-repeat for IntelMQ API
-  debconf:
-    name: python3-intelmq-api
-    question: intelmq-api/password-repeat
-    value: asdf
-    vtype: password
 - name: Add apt key
   apt_key:
     url: https://download.opensuse.org/repositories/home:sebix:intelmq:/unstable/Debian_10/Release.key
