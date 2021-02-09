@@ -1,11 +1,6 @@
 - hosts: all
   become: yes
   tasks:
-    - name: Install packages
-      apt:
-        update-cache: yes
-        pkg:
-          - gpg
     - name: Prepare Debian and Ubuntu
       include: debian_based.yml
       when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu"
@@ -18,13 +13,23 @@
     - name: Setup Ubuntu 20.04
       include: ubuntu_2004.yml
       when: ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_version'] == "20.04"
-    - name: Install packages
+    - name: Update APT cache
       apt:
         update-cache: yes
-        pkg:
-          - python3-intelmq-api
-          - intelmq-manager
-          - apache2
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu"
+    - name: Setup CentOS
+      include: centos.yml
+      when: ansible_facts['distribution'] == "CentOS"
+    - name: Install IntelMQ packages
+      package:
+        name: "{{ item }}"
+      with_items:
+      - intelmq-manager
+      - intelmq-api
+      - intelmq
+    - name: Setup CentOS
+      include: centos_postinstall.yml
+      when: ansible_facts['distribution'] == "CentOS"
     - name: Copy runtime.conf
       copy:
         src: '../assets/runtime.conf'
@@ -33,6 +38,15 @@
       copy:
         src: '../assets/pipeline.conf'
         dest: '/etc/intelmq/pipeline.conf'
+    - name: Make sure redis is running
+      ansible.builtin.systemd:
+        state: started
+        name: redis
+    - name: Make sure webserver is running
+      ansible.builtin.systemd:
+        state: started
+        name: "{{webserver}}"
+
 
 
 # CLI related tests

@@ -1,0 +1,10 @@
+- name: Configure API user
+  command:
+    cmd: hug -m intelmq_api.serve -c add_user admin --password=asdf
+  environment:
+    INTELMQ_API_CONFIG: /etc/intelmq/api-config.json
+  become: yes
+  become_user: apache
+  vars:
+    # required because of become_user with an unprivileged user. see https://docs.ansible.com/ansible/latest/user_guide/become.html#id6
+    ansible_ssh_pipelining: yes
