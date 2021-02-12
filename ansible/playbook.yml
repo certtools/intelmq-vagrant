@@ -13,10 +13,6 @@
     - name: Setup Ubuntu 20.04
       include: ubuntu_2004.yml
       when: ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_version'] == "20.04"
-    - name: Update APT cache
-      apt:
-        update-cache: yes
-      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu"
     - name: Setup CentOS
       include: centos.yml
       when: ansible_facts['distribution'] == "CentOS"

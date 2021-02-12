@@ -1,3 +1,6 @@
+- name: Update APT cache
+  apt:
+    update-cache: yes
 - name: Install gpg
   apt:
     update-cache: yes
