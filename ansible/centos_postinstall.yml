@@ -1,6 +1,6 @@
 - name: Configure API user
   command:
-    cmd: hug -m intelmq_api.serve -c add_user admin --password=asdf
+    cmd: intelmq-api-adduser --user admin --password asdf
   environment:
     INTELMQ_API_CONFIG: /etc/intelmq/api-config.json
   become: yes
