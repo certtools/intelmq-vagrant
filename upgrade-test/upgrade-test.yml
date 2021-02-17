@@ -1,0 +1,77 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Prepare Debian and Ubuntu
+      include: ../ansible/debian_based.yml
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu"
+    # First we install from stable
+    - name: Add apt key
+      apt_key:
+        url: https://download.opensuse.org/repositories/home:sebix:intelmq/Debian_10/Release.key
+        state: present
+    - name: Setup APT repository Debian 10
+      apt_repository:
+        repo: deb http://download.opensuse.org/repositories/home:/sebix:/intelmq/Debian_10/ /
+        state: present
+    - name: Install IntelMQ packages
+      package:
+        name: "{{ item }}"
+      with_items:
+      - intelmq-manager
+      - intelmq
+    - name: Copy runtime.conf
+      copy:
+        src: '../assets/runtime.conf'
+        dest: '/etc/intelmq/runtime.conf'
+    - name: Copy pipeline.conf
+      copy:
+        src: '../assets/pipeline.conf'
+        dest: '/etc/intelmq/pipeline.conf'
+    - name: Make sure redis is running
+      ansible.builtin.systemd:
+        state: started
+        name: redis
+    - name: Make sure webserver is running
+      ansible.builtin.systemd:
+        state: started
+        name: "{{webserver}}"
+    # Now we add the unstable sources
+    - name: Setup Debian 10
+      include: ../ansible/debian_10.yml
+      when: ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_version'] == "10"
+    - name: Update cache
+      apt:
+        update_cache: yes
+    - name: Install IntelMQ packages
+      package:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+      - intelmq-manager
+      - intelmq
+
+
+# CLI related tests
+#
+# Those tests run intelmqctl
+#
+    - name: Run CLI tests
+      include: "{{ item }}"
+      loop: "{{ query('fileglob', '../ansible/tasks/cli/*.yml') | sort }}"
+
+# API related tests
+#
+# Those tests access the intelmq-api and manage the botnet
+# Most of them depend on the 00_registerauth.yml task that provides the authentication token
+#
+    - name: Run API tests
+      include: "{{ item }}"
+      loop: "{{ query('fileglob', '../ansible/tasks/api/*.yml') | sort }}"
+
+# Manager related tests
+#
+# Those tests access the intelmq-manager webinterface
+#
+    - name: Run Manager tests
+      include: "{{ item }}"
+      loop: "{{ query('fileglob', '../ansible/tasks/manager/*.yml') | sort }}"
