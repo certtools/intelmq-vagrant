@@ -2,10 +2,13 @@
     path: /assets/foo.txt
     create: true
     line: foobar
-- command: intelmqctl start file-output
-- command: intelmqctl start file-input
+- name: Start file-output bot
+  command: intelmqctl start file-output
+- name: Start file-input bot
+  command: intelmqctl start file-input
   ignore_errors: yes
-- command: intelmqctl stop file-output
+- name: Stop file-output bot
+  command: intelmqctl stop file-output
 - slurp:
     src: /var/lib/intelmq/bots/file-output/events.txt
   register: events
