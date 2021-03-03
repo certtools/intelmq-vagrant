@@ -8,3 +8,10 @@
   vars:
     # required because of become_user with an unprivileged user. see https://docs.ansible.com/ansible/latest/user_guide/become.html#id6
     ansible_ssh_pipelining: yes
+- name: Create log file as user intelmq, as the CLI tests are running as user root instead of user intelmq
+  file:
+    owner: intelmq
+    group: intelmq
+    mode: '0664'
+    path: /var/log/intelmq/intelmqctl.log
+    state: touch
