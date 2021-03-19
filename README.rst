@@ -15,6 +15,12 @@ To run one of the VMs you enter the corresponding directory and run ``vagrant up
 You can enter the VM using ``vagrant ssh``. Every VM exposes port ``80`` on the host port ``8080``.
 You can halt the VM using ``vagrant halt``, you can destroy the VM by using ``vagrant destroy``.
 
-The tests *should* be indepotent, so running ``vagrant provision`` after running ``vagrant up`` should not give another result.
+The tests *should* be idempotent, so running ``vagrant provision`` after running ``vagrant up`` should not give another result.
 
 There is a ``Makefile`` that runs ``vagrant up`` and ``vagrant destroy`` for everyone of the boxes and saves the output to logfiles.
+
+Unstable and stable
+-------------------
+
+By default the repository tests the *unstable* repositories (base ``https://download.opensuse.org/repositories/home:/sebix:/intelmq/``).
+Set the environment variable ``intelmq_vagrant_test_stable=yes`` to test the *stable* repositories instead (base ``https://download.opensuse.org/repositories/home:/sebix:/intelmq:/unstable/``).
