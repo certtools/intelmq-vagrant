@@ -43,29 +43,5 @@
         state: started
         name: "{{webserver}}"
 
-
-
-# CLI related tests
-#
-# Those tests run intelmqctl
-#
-    - name: Run CLI tests
-      include: "{{ item }}"
-      loop: "{{ query('fileglob', 'tasks/cli/*.yml') | sort }}"
-
-# API related tests
-#
-# Those tests access the intelmq-api and manage the botnet
-# Most of them depend on the 00_registerauth.yml task that provides the authentication token
-#
-    - name: Run API tests
-      include: "{{ item }}"
-      loop: "{{ query('fileglob', 'tasks/api/*.yml') | sort }}"
-
-# Manager related tests
-#
-# Those tests access the intelmq-manager webinterface
-#
-    - name: Run Manager tests
-      include: "{{ item }}"
-      loop: "{{ query('fileglob', 'tasks/manager/*.yml') | sort }}"
+    - name: Run tasks
+      include: "tasks.yml"
