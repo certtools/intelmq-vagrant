@@ -33,7 +33,7 @@
   register: apibotstart
 - name: Check file-input start via API
   assert:
-    that: "'stopped' in apibotstart.content"
+    that: "'stopped' in apibotstart.content or 'running' in apibotstart.content"
 - name: Get file-input status via CLI
   command: intelmqctl status file-input
   register: intelmqctlstatus
