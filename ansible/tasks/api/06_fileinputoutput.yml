@@ -1,55 +1,65 @@
-- lineinfile:
+- name: create file input/output file
+  lineinfile:
     path: /assets/api_06_fileinputoutput.txt
     create: true
     line: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 # start fileoutput and check status
-- uri:
+- name: Start file-output via API
+  uri:
     url: http://localhost/intelmq/v1/api/bot/?id=file-output&action=start
     return_content: yes
     headers:
       Authorization: '{{ auth.json.login_token }}'
   register: apibotstart
-- name: Check bot start via API
+- name: Check file-output start via API
   assert:
     that: "'running' in apibotstart.content"
-- command: intelmqctl status file-output
+- name: Get file-output status via CLI
+  command: intelmqctl status file-output
   register: intelmqctlstatus
   ignore_errors: yes
-- assert:
+- name: Check file-output start via CLI
+  assert:
     that: "'Bot file-output is running.' in intelmqctlstatus.stdout"
 
 # start fileinput and check status
-- uri:
+- name: Start file-input via API
+  uri:
     url: http://localhost/intelmq/v1/api/bot/?id=file-input&action=start
     return_content: yes
     headers:
       Authorization: '{{ auth.json.login_token }}'
   register: apibotstart
-- name: Check bot start via API
+- name: Check file-input start via API
   assert:
     that: "'stopped' in apibotstart.content"
-- command: intelmqctl status file-input
+- name: Get file-input status via CLI
+  command: intelmqctl status file-input
   register: intelmqctlstatus
   ignore_errors: yes
-- assert:
+- name: Check file-input status via CLI
+  assert:
     that: "'Bot file-input is stopped.' in intelmqctlstatus.stdout"
 
 # stop fileoutput and check status
-- uri:
+- name: Stop file-output via API
+  uri:
     url: http://localhost/intelmq/v1/api/bot/?id=file-output&action=stop
     return_content: yes
     headers:
       Authorization: '{{ auth.json.login_token }}'
   register: apibotstop
-- name: Check bot stop via API
+- name: Check file-output stop via API
   assert:
     that: "'stopped' in apibotstop.content"
 
-- slurp:
+- name: Slurp file-output data
+  slurp:
     src: /var/lib/intelmq/bots/file-output/events.txt
   register: events
-- assert:
+- name: Check file-output file
+  assert:
   # The output of the slurp command apparently gets parsed as a python dict, so we can't just
   # compare the string. Therefore there are multiple asserts:
     that: 
@@ -58,7 +68,7 @@
       - "{{ events['content'] | b64decode }}['feed.url'] == 'file://localhost/assets/api_06_fileinputoutput.txt'"
       - "'time.observation' in  {{ events['content'] | b64decode }}"
 
-- name: Clean up
+- name: Clean up file-output files
   file:
     state: absent
     path: "{{ path }}"
