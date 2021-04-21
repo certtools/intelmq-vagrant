@@ -6,4 +6,4 @@
   register: curlapiqueues
 - name: Check queue status via API
   assert:
-    that: "'{{ lookup('file', '../assets/00_queues') }}' in curlapiqueues.content"
+    that: "'{{ lookup('file', 'assets/00_queues') }}' in curlapiqueues.content"
