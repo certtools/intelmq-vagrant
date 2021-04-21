@@ -19,6 +19,13 @@ The tests *should* be idempotent, so running ``vagrant provision`` after running
 
 There is a ``Makefile`` that runs ``vagrant up`` and ``vagrant destroy`` for everyone of the boxes and saves the output to logfiles.
 
+Run scripts locally
+-------------------
+
+To run the ansible recipies without vagrant directly on the local machine, use:
+
+    ansible-playbook --connection=local -i ansible/inventory.yml ansible/playbook.yml
+
 Unstable and stable
 -------------------
 
