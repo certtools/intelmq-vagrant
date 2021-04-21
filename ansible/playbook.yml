@@ -32,11 +32,11 @@
       when: ansible_facts['distribution'] == "CentOS"
     - name: Copy runtime.conf
       copy:
-        src: '../assets/runtime.conf'
+        src: 'assets/runtime.conf'
         dest: '/etc/intelmq/runtime.conf'
     - name: Copy pipeline.conf
       copy:
-        src: '../assets/pipeline.conf'
+        src: 'assets/pipeline.conf'
         dest: '/etc/intelmq/pipeline.conf'
     - name: Make sure redis is running
       ansible.builtin.systemd:
