@@ -10,7 +10,7 @@
       when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu"
     - name: Setup Debian 10
       include: debian_10.yml
-      when: ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_version'] == "10"
+      when: ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] == "10"
     - name: Setup Ubuntu 18.04
       include: ubuntu_1804.yml
       when: ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_version'] == "18.04"
