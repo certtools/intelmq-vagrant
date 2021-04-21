@@ -2,7 +2,7 @@
   become: yes
   tasks:
     - name: Prepare Debian and Ubuntu
-      include: ../ansible/debian_based.yml
+      include: debian_based.yml
       when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu"
     # First we install from stable
     - name: Add apt key
@@ -21,11 +21,11 @@
       - intelmq
     - name: Copy runtime.conf
       copy:
-        src: '../assets/runtime.conf'
+        src: 'assets/runtime.conf'
         dest: '/etc/intelmq/runtime.conf'
     - name: Copy pipeline.conf
       copy:
-        src: '../assets/pipeline.conf'
+        src: 'assets/pipeline.conf'
         dest: '/etc/intelmq/pipeline.conf'
     - name: Make sure redis is running
       ansible.builtin.systemd:
@@ -36,9 +36,14 @@
         state: started
         name: "{{webserver}}"
     # Now we add the unstable sources
-    - name: Setup Debian 10
-      include: ../ansible/debian_10.yml
-      when: ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_version'] == "10"
+    - name: Add apt key
+      apt_key:
+        url: https://download.opensuse.org/repositories/home:/sebix:/intelmq:/unstable/Debian_10/Release.key
+        state: present
+    - name: Setup APT repository Debian 10
+      apt_repository:
+        repo: deb https://download.opensuse.org/repositories/home:/sebix:/intelmq:/unstable/Debian_10/ /
+        state: present
     - name: Update cache
       apt:
         update_cache: yes
@@ -57,7 +62,7 @@
 #
     - name: Run CLI tests
       include: "{{ item }}"
-      loop: "{{ query('fileglob', '../ansible/tasks/cli/*.yml') | sort }}"
+      loop: "{{ query('fileglob', 'tasks/cli/*.yml') | sort }}"
 
 # API related tests
 #
@@ -66,7 +71,7 @@
 #
     - name: Run API tests
       include: "{{ item }}"
-      loop: "{{ query('fileglob', '../ansible/tasks/api/*.yml') | sort }}"
+      loop: "{{ query('fileglob', 'tasks/api/*.yml') | sort }}"
 
 # Manager related tests
 #
@@ -74,4 +79,4 @@
 #
     - name: Run Manager tests
       include: "{{ item }}"
-      loop: "{{ query('fileglob', '../ansible/tasks/manager/*.yml') | sort }}"
+      loop: "{{ query('fileglob', 'tasks/manager/*.yml') | sort }}"

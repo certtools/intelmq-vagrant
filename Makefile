@@ -1,4 +1,4 @@
-FOLDERS := debian-buster ubuntu-18.04 ubuntu-20.04 centos-7 centos-8
+FOLDERS := debian-buster ubuntu-18.04 ubuntu-20.04 centos-7 centos-8 upgrade-test
 RM	:= rm -f
 
 .PHONY: $(FOLDERS) clean
@@ -6,7 +6,7 @@ RM	:= rm -f
 all: $(FOLDERS)
 
 $(FOLDERS):
-	cd $@ && vagrant up | tee ../$@.log && vagrant destroy -f
+	cd machines/$@ && vagrant up | tee ../$@.log && vagrant destroy -f
 
 clean:
 	$(RM) *.log
