@@ -11,6 +11,9 @@
 - name: Set webserver service name
   set_fact:
     webserver: httpd
+- name: Set redis service name
+  set_fact:
+    redis: redis
 # for some weird reason, CentOS 7 can't resolve the dependency /bin/python3.6 with python36 not installed
 - name: install python36 on CentOS 7
   package:

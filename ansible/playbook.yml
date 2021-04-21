@@ -41,7 +41,7 @@
     - name: Make sure redis is running
       service:
         state: started
-        name: redis
+        name: "{{redis}}"
     - name: Make sure webserver is running
       service:
         state: started
