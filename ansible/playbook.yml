@@ -39,11 +39,11 @@
         src: 'assets/pipeline.conf'
         dest: '/etc/intelmq/pipeline.conf'
     - name: Make sure redis is running
-      ansible.builtin.systemd:
+      service:
         state: started
         name: redis
     - name: Make sure webserver is running
-      ansible.builtin.systemd:
+      service:
         state: started
         name: "{{webserver}}"
 
