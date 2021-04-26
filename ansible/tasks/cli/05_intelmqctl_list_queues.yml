@@ -1,0 +1,30 @@
+- name: Run intelmqctl list queues
+  command: intelmqctl list queues
+  register: intelmqctllistqueues
+- name: Check output of intelmqctl list queues
+  fail:
+    msg: 'The line "{{ line }}" is missing.'
+  when: '"{{ line }}" not in "{{ intelmqctllistqueues.stdout_lines }}"'
+  loop:
+    - "cymru-whois-expert-queue - 0"
+    - "cymru-whois-expert-queue-internal - 0"
+    - "deduplicator-expert-queue - 0"
+    - "deduplicator-expert-queue-internal - 0"
+    - "feodo-tracker-browse-parser-queue - 0"
+    - "feodo-tracker-browse-parser-queue-internal - 0"
+    - "file-output-queue - 0"
+    - "file-output-queue-internal - 0"
+    - "gethostbyname-1-expert-queue - 0"
+    - "gethostbyname-1-expert-queue-internal - 0"
+    - "gethostbyname-2-expert-queue - 0"
+    - "gethostbyname-2-expert-queue-internal - 0"
+    - "malc0de-parser-queue - 0"
+    - "malc0de-parser-queue-internal - 0"
+    - "spamhaus-drop-parser-queue - 0"
+    - "spamhaus-drop-parser-queue-internal - 0"
+    - "taxonomy-expert-queue - 0"
+    - "taxonomy-expert-queue-internal - 0"
+    - "url2fqdn-expert-queue - 0"
+    - "url2fqdn-expert-queue-internal - 0"
+  loop_control:
+    loop_var: line
