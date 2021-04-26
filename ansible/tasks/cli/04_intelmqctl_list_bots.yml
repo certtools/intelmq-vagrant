@@ -1,0 +1,37 @@
+- name: Run intelmqctl list bots
+  command: intelmqctl list bots
+  register: intelmqctllistbots
+- name: Check output of intelmqctl list bots
+  fail:
+    msg: 'The line "{{ line }}" is missing.'
+  when: '"{{ line }}" not in "{{ intelmqctllistbots.stdout_lines }}"'
+  loop:
+    - "Bot ID: cymru-whois-expert"
+    - "Description: Cymru Whois (IP to ASN) is the bot responsible to add network information to the events (BGP, ASN, AS Name, Country, etc..)."
+    - "Description: Deduplicator is the bot responsible for detection and removal of duplicate messages. Messages get cached for <redis_cache_ttl> seconds. If found in the cache, it is assumed to be a duplicate."
+    - "Bot ID: feodo-tracker-browse-collector"
+    - "Description: Generic URL Fetcher is the bot responsible to get the report from an URL."
+    - "Bot ID: feodo-tracker-browse-parser"
+    - "Description: HTML Table Parser is a bot configurable to parse different html table data."
+    - "Bot ID: file-input"
+    - "Description: foobar"
+    - "Bot ID: file-output"
+    - "Description: File is the bot responsible to send events to a file."
+    - "Bot ID: gethostbyname-1-expert"
+    - "Description: fqdn2ip is the bot responsible to parsing the ip from the fqdn."
+    - "Bot ID: gethostbyname-2-expert"
+    - "Description: fqdn2ip is the bot responsible to parsing the ip from the fqdn."
+    - "Bot ID: malc0de-parser"
+    - "Description: Malc0de Parser is the bot responsible to parse the IP Blacklist and either Windows Format or Bind Format reports and sanitize the information."
+    - "Bot ID: malc0de-windows-format-collector"
+    - "Description: "
+    - "Bot ID: spamhaus-drop-collector"
+    - "Description: "
+    - "Bot ID: spamhaus-drop-parser"
+    - "Description: Spamhaus Drop Parser is the bot responsible to parse the DROP, EDROP, DROPv6, and ASN-DROP reports and sanitize the information."
+    - "Bot ID: taxonomy-expert"
+    - "Description: Taxonomy is the bot responsible to apply the eCSIRT Taxonomy to all events."
+    - "Bot ID: url2fqdn-expert"
+    - "Description: url2fqdn is the bot responsible to parsing the fqdn from the url."
+  loop_control:
+    loop_var: line
