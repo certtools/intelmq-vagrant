@@ -9,4 +9,4 @@ $(FOLDERS):
 	cd machines/$@ && vagrant up | tee ../$@.log && vagrant destroy -f
 
 clean:
-	$(RM) *.log
+	$(RM) machines/*.log
