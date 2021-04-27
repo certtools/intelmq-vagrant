@@ -1,0 +1,103 @@
+# TODO:
+# * change path in api-config to /usr/local/bin/intelmqctl
+# * change path in /etc/apache2/conf-enabled/api-apache.conf to /usr/local/lib/python3.7/dist-packages/intelmq_api/...
+# * create database or fix session_store
+# * fix path in /etc/apache2/conf-enabled/manager-apache.conf to /usr/local/lib/python3.7/dist-packages/usr/share/intelmq_manager/html/
+# * change patch in sudoers file to /usr/local/bin/intelmqctl
+# * set permissions on /opt/intelmq/var/log/intelmqctl.log
+- hosts: all
+  become: yes
+  tasks:
+    - name: Set repository URL to stable
+      set_fact:
+        repository_base: "{{ 'https://download.opensuse.org/repositories/home:/sebix:/intelmq/' if lookup('env', 'intelmq_vagrant_test_stable') == 'yes' else 'https://download.opensuse.org/repositories/home:/sebix:/intelmq:/unstable/'}}"
+    - name: Prepare Debian and Ubuntu
+      include: debian_based.yml
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu"
+    - name: Setup Debian 10
+      include: debian_10.yml
+      when: ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_version'] == "10"
+    - name: Setup Ubuntu 18.04
+      include: ubuntu_1804.yml
+      when: ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_version'] == "18.04"
+    - name: Setup Ubuntu 20.04
+      include: ubuntu_2004.yml
+      when: ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_version'] == "20.04"
+    - name: Setup CentOS
+      include: centos.yml
+      when: ansible_facts['distribution'] == "CentOS"
+    - name: Install git
+      package:
+        name: "{{ item }}"
+      with_items:
+      - git
+      - python3-pip
+      - python3-setuptools
+      - python3-virtualenv
+      - python-setuptools
+      - apache2
+      - redis
+      - libapache2-mod-wsgi-py3
+    - name: Setup intelmq
+      pip:
+        name: git+http://github.com/certtools/intelmq
+        executable: pip3
+    - name: Setup intelmq-api
+      pip:
+        name: git+http://github.com/certtools/intelmq-api
+        executable: pip3
+    - name: Setup intelmq-manager
+      pip:
+        name: git+http://github.com/certtools/intelmq-manager
+        executable: pip3
+    - name: intelmq user
+      user:
+        name: intelmq
+    - name: intelmq group
+      group:
+        name: intelmq
+    - name: add www-data to intelmq group
+      user:
+        name: www-data
+        groups: intelmq
+
+    - name: Run intelmqsetup
+      command: intelmqsetup
+    - name: Create /var/lib/intelmq
+      file:
+        path: /var/lib/intelmq
+        state: directory
+        owner: intelmq
+        group: intelmq
+
+    - name: Setup CentOS
+      include: centos_postinstall.yml
+      when: ansible_facts['distribution'] == "CentOS"
+    - name: Create /opt/intelmq/var/lib/
+      file:
+        path: /opt/intelmq/var/lib/
+        state: directory
+        owner: intelmq
+        group: intelmq
+    - name: Create /opt/intelmq/var/lib/state.json
+      file:
+        path: /opt/intelmq/var/lib/state.json
+        state: touch
+        owner: intelmq
+        group: intelmq
+
+    - name: Copy runtime.conf
+      copy:
+        src: 'assets/runtime-devel.conf'
+        dest: '/opt/intelmq/etc/runtime.yaml'
+    - name: Make sure redis is running
+      ansible.builtin.systemd:
+        state: started
+        name: redis
+    - name: Make sure webserver is running
+      ansible.builtin.systemd:
+        state: started
+        name: "{{webserver}}"
+
+    - name: Run tasks
+      include: "tasks.yml"
