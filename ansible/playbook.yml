@@ -1,10 +1,6 @@
-
 - hosts: all
   become: yes
   tasks:
-    - name: Set repository URL to stable
-      set_fact:
-        repository_base: "{{ 'https://download.opensuse.org/repositories/home:/sebix:/intelmq/' if lookup('env', 'intelmq_vagrant_test_stable') == 'yes' else 'https://download.opensuse.org/repositories/home:/sebix:/intelmq:/unstable/'}}"
     - name: Prepare Debian and Ubuntu
       include: debian_based.yml
       when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu"
