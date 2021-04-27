@@ -1,0 +1,6 @@
+- name: Run intelmqctl upgrade-config
+  command: intelmqctl upgrade-config
+  register: intelmqctlupgradeconfig
+- name: Check output of intelmqct upgrade-config
+  assert:
+    that: "'Configuration upgrade successful!' in intelmqctlupgradeconfig.stdout"
