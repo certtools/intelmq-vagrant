@@ -1,13 +1,22 @@
 - name: Install EPEL
   package:
     name: epel-release
-- name: Add IntelMQ repository
+- name: Add IntelMQ stable repository
   yum_repository:
     name: intelmq
     repo_gpgcheck: yes
+    baseurl: https://download.opensuse.org/repositories/home:/sebix:/intelmq/CentOS_$releasever/
+    gpgkey: "https://download.opensuse.org/repositories/home:/sebix:/intelmq/CentOS_{{ ansible_distribution_major_version }}/repodata/repomd.xml.key"
+    description: IntelMQ stable Repository
+- name: Add IntelMQ unstable repository
+  yum_repository:
+    name: intelmq_unstable
+    repo_gpgcheck: yes
     baseurl: https://download.opensuse.org/repositories/home:/sebix:/intelmq:/unstable/CentOS_$releasever/
     gpgkey: "https://download.opensuse.org/repositories/home:/sebix:/intelmq:/unstable/CentOS_{{ ansible_distribution_major_version }}/repodata/repomd.xml.key"
-    description: IntelMQ Repository
+    description: IntelMQ unstable Repository
+    priority: 90
+  when: lookup('env', 'intelmq_vagrant_test_stable') != 'yes'
 - name: Set webserver service name
   set_fact:
     webserver: httpd
