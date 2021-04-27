@@ -1,8 +1,8 @@
 - name: Add apt key
   apt_key:
-    url: "{{ repository_base }}/Debian_10/Release.key"
+    url: https://download.opensuse.org/repositories/home:sebix:intelmq:/unstable/Debian_10/Release.key
     state: present
 - name: Setup APT repository Debian 10
   apt_repository:
-    repo: "deb {{ repository_base }}/Debian_10/ /"
+    repo: deb http://download.opensuse.org/repositories/home:/sebix:/intelmq:/unstable/Debian_10/ /
     state: present

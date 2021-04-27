@@ -1,8 +1,8 @@
 - name: Add apt key
   apt_key:
-    url: "{{ repository_base }}/xUbuntu_18.04/Release.key"
+    url: https://download.opensuse.org/repositories/home:sebix:intelmq:/unstable/xUbuntu_18.04/Release.key
     state: present
 - name: Setup APT repository Ubuntu 18.04
   apt_repository:
-    repo: "deb {{ repository_base }}/xUbuntu_18.04/ /"
+    repo: deb http://download.opensuse.org/repositories/home:/sebix:/intelmq:/unstable/xUbuntu_18.04/ /
     state: present

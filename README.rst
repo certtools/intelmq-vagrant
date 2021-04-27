@@ -25,9 +25,3 @@ Run scripts locally
 To run the ansible recipies without vagrant directly on the local machine, use:
 
     ansible-playbook --connection=local -i ansible/inventory.yml ansible/playbook.yml
-
-Unstable and stable
--------------------
-
-By default the repository tests the *unstable* repositories (base ``https://download.opensuse.org/repositories/home:/sebix:/intelmq/``).
-Set the environment variable ``intelmq_vagrant_test_stable=yes`` to test the *stable* repositories instead (base ``https://download.opensuse.org/repositories/home:/sebix:/intelmq:/unstable/``).

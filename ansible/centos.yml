@@ -5,8 +5,8 @@
   yum_repository:
     name: intelmq
     repo_gpgcheck: yes
-    baseurl: "{{ repository_base }}/CentOS_$releasever/"
-    gpgkey: "{{ repository_base }}/CentOS_{{ ansible_distribution_major_version }}/repodata/repomd.xml.key"
+    baseurl: https://download.opensuse.org/repositories/home:/sebix:/intelmq:/unstable/CentOS_$releasever/
+    gpgkey: "https://download.opensuse.org/repositories/home:/sebix:/intelmq:/unstable/CentOS_{{ ansible_distribution_major_version }}/repodata/repomd.xml.key"
     description: IntelMQ Repository
 - name: Set webserver service name
   set_fact:
