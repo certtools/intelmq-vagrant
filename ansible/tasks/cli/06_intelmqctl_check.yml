@@ -1,0 +1,6 @@
+- name: Run intelmqctl check
+  command: intelmqctl check
+  register: intelmqctlcheck
+- name: Check output of intelmqct check
+  assert:
+    that: "'No issues found.' in intelmqctlcheck.stdout"
