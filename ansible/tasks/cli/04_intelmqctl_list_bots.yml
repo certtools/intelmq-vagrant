@@ -1,10 +1,15 @@
 - name: Run intelmqctl list configured bots
   command: intelmqctl list bots --configured
-  register: intelmqctllistbotsconfigured
-- name: Check output of intelmqctl list bots --configured
+  register: intelmqctllistbots
+  when: intelmq_major_version == '3'
+- name: Run intelmqctl list bots
+  command: intelmqctl list bots
+  register: intelmqctllistbots
+  when: intelmq_major_version == '2'
+- name: Check output of intelmqctl list bots (--configured)
   fail:
     msg: 'The line "{{ line }}" is missing.'
-  when: '"{{ line }}" not in "{{ intelmqctllistbotsconfigured.stdout_lines }}"'
+  when: '"{{ line }}" not in "{{ intelmqctllistbots.stdout_lines }}"'
   loop:
     - "Bot ID: cymru-whois-expert"
     - "Description: Cymru Whois (IP to ASN) is the bot responsible to add network information to the events (BGP, ASN, AS Name, Country, etc..)."
