@@ -1,24 +1,38 @@
+# Store the intelmq version in a variable
+- name: Get intelmq version
+  command: intelmqctl --version
+  register: intelmqversion
+- name: Set intelmq_version fact
+  set_fact:
+    intelmq_version={{ intelmqversion.stdout }}
+- name: Set intelmq_major_version fact
+  set_fact:
+    intelmq_major_version={{ intelmqversion.stdout[:1] }}
+- name: Print version
+  debug:
+    msg: IntelMQ Version {{ intelmq_version }} and IntelMQ Major Version {{ intelmq_major_version }}
+
 # CLI related tests
 #
 # Those tests run intelmqctl
 #
-    - name: Run CLI tests
-      include: "{{ item }}"
-      loop: "{{ query('fileglob', 'tasks/cli/*.yml') | sort }}"
+- name: Run CLI tests
+  include: "{{ item }}"
+  loop: "{{ query('fileglob', 'tasks/cli/*.yml') | sort }}"
 
 # API related tests
 #
 # Those tests access the intelmq-api and manage the botnet
 # Most of them depend on the 00_registerauth.yml task that provides the authentication token
 #
-    - name: Run API tests
-      include: "{{ item }}"
-      loop: "{{ query('fileglob', 'tasks/api/*.yml') | sort }}"
+- name: Run API tests
+  include: "{{ item }}"
+  loop: "{{ query('fileglob', 'tasks/api/*.yml') | sort }}"
 
 # Manager related tests
 #
 # Those tests access the intelmq-manager webinterface
 #
-    - name: Run Manager tests
-      include: "{{ item }}"
-      loop: "{{ query('fileglob', 'tasks/manager/*.yml') | sort }}"
+- name: Run Manager tests
+  include: "{{ item }}"
+  loop: "{{ query('fileglob', 'tasks/manager/*.yml') | sort }}"
