@@ -26,10 +26,10 @@ To run the ansible recipies without vagrant directly on the local machine, use:
 
     ansible-playbook --connection=local -i ansible/inventory.yml ansible/playbook.yml
 
-stable CentOS repos
--------------------
+stable CentOS or Debian 10 repos
+--------------------------------
 
-By default the repository tests the *unstable* repositories (base ``https://download.opensuse.org/repositories/home:/sebix:/intelmq/``).
-Set the environment variable ``intelmq_vagrant_test_stable=yes`` to test the *stable* repositories instead (base ``https://download.opensuse.org/repositories/home:/sebix:/intelmq:/unstable/``).
+By default the repository tests the *unstable* repositories (base ``https://download.opensuse.org/repositories/home:/sebix:/intelmq/:unstable/``).
+Set the environment variable ``intelmq_vagrant_test_stable=yes`` to test the *stable* repositories instead (base ``https://download.opensuse.org/repositories/home:/sebix:/intelmq/``).
 
-Only implemented for CentOS.
+Only implemented for CentOS and Debian 10.
