@@ -26,14 +26,26 @@
     - name: Setup CentOS
       include: centos_postinstall.yml
       when: ansible_facts['distribution'] == "CentOS"
+    - name: Delete runtime.yaml
+      file:
+        path: '/etc/intelmq/runtime.yaml'
+        state: absent
     - name: Copy runtime.conf
       copy:
         src: 'assets/runtime.conf'
         dest: '/etc/intelmq/runtime.conf'
+        owner: intelmq
+        group: intelmq
+        mode: '0664'
     - name: Copy pipeline.conf
       copy:
         src: 'assets/pipeline.conf'
         dest: '/etc/intelmq/pipeline.conf'
+        owner: intelmq
+        group: intelmq
+        mode: '0664'
+    - name: Run configuration upgrade
+      command: intelmqctl upgrade-config -u v300_pipeline_file_removal -f
     - name: Make sure redis is running
       service:
         state: started
