@@ -1,5 +1,5 @@
 - name: Start file-output bot
-  command: intelmqctl start file-output
+  command: nohup intelmqctl start file-output
   register: intelmqctlstartfileoutput
 - name: Get status of file-output bot
   command: intelmqctl status file-output
