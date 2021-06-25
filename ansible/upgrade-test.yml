@@ -54,6 +54,8 @@
       with_items:
       - intelmq-manager
       - intelmq
+    - name: Run configuration upgrade
+      command: intelmqctl upgrade-config -u v300_pipeline_file_removal -f
 
 
 # CLI related tests
