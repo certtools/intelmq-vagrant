@@ -44,8 +44,6 @@
         owner: intelmq
         group: intelmq
         mode: '0664'
-    - name: Run configuration upgrade
-      command: intelmqctl upgrade-config -u v300_pipeline_file_removal -f
     - name: Make sure redis is running
       service:
         state: started
