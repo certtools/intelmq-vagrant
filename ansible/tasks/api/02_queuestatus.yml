@@ -4,6 +4,13 @@
     headers:
       Authorization: '{{ auth.json.login_token }}'
   register: curlapiqueues
-- name: Check queue status via API
+- name: Check queue status via API (for IntelMQ == 3.0)
   assert:
-    that: "'{{ lookup('file', 'assets/00_queues') }}' in curlapiqueues.content"
+    that: "{{ lookup('file', 'assets/00_queues') | from_json }} == {{ curlapiqueues.content | from_json }}"
+  when:
+    intelmq_major_version == '3'
+- name: Check queue status via API (for IntelMQ != 3.0)
+  assert:
+    that: "{{ lookup('file', 'assets/00_queues_pre30') | from_json }} == {{ curlapiqueues.content | from_json }}"
+  when:
+    intelmq_major_version != '3'
