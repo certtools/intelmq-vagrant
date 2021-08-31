@@ -1,0 +1,2 @@
+- name: Run intelmqctl list queues -q
+  command: intelmqctl list queues -q
