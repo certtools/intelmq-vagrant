@@ -1,2 +1,2 @@
-- name: Run intelmqctl run file-output message get
-  command: intelmqctl run file-output message get
+- name: Run intelmqctl run file-input message get
+  command: intelmqctl run file-input message get
