@@ -1,3 +1,7 @@
+# Are we running on a CI?
+- name: Check if we are running on a CI
+  set_fact:
+    ci={{ lookup('env','CI') | default('false', true) }}
 # Store the intelmq version in a variable
 - name: Get intelmq version
   command: intelmqctl --version
@@ -34,6 +38,7 @@
 - name: Run API tests
   include: "{{ item }}"
   loop: "{{ query('fileglob', 'tasks/api/*.yml') | sort }}"
+  when: not ci | bool
 
 # Manager related tests
 #
@@ -42,3 +47,4 @@
 - name: Run Manager tests
   include: "{{ item }}"
   loop: "{{ query('fileglob', 'tasks/manager/*.yml') | sort }}"
+  when: not ci | bool
