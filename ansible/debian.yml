@@ -1,0 +1,18 @@
+- name: Add apt key
+  apt_key:
+    url: "https://download.opensuse.org/repositories/home:sebix:intelmq/Debian_{{ansible_distribution_major_version}}/Release.key"
+    state: present
+- name: Add apt key
+  apt_key:
+    url: "https://download.opensuse.org/repositories/home:sebix:intelmq:/unstable/Debian_{{ansible_distribution_major_version}}/Release.key"
+    state: present
+  when: lookup('env', 'intelmq_vagrant_test_stable') != 'yes'
+- name: Setup IntelMQ stable Debian repository
+  apt_repository:
+    repo: "deb http://download.opensuse.org/repositories/home:/sebix:/intelmq/Debian_{{ansible_distribution_major_version}}/ /"
+    state: present
+- name: Setup IntelMQ unstable Debian repository
+  apt_repository:
+    repo: "deb http://download.opensuse.org/repositories/home:/sebix:/intelmq:/unstable/Debian_{{ansible_distribution_major_version}}/ /"
+    state: present
+  when: lookup('env', 'intelmq_vagrant_test_stable') != 'yes'
