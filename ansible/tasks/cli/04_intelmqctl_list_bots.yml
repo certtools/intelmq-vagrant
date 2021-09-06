@@ -4,3 +4,10 @@
 - name: Check output of intelmqctl list bots (--configured)
   assert:
     that: "{{ lookup('file', 'assets/list_bots_json') | from_json }} == {{ intelmqctllistbots.stdout | from_json }}"
+
+# for the listing of all bots we don't compare the output,
+# because it would change anytime a new bot is added
+- name: Run intelmqctl list bots
+  command: intelmqctl list bots
+- name: Run intelmqctl --type json list bots
+  command: intelmqctl --type json list bots
