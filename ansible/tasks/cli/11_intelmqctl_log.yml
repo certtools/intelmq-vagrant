@@ -1,0 +1,2 @@
+- name: Run intelmqctl log file-input
+  command: intelmqctl log file-input
