@@ -18,8 +18,6 @@
     - "gethostbyname-1-expert-queue-internal - 0"
     - "gethostbyname-2-expert-queue - 0"
     - "gethostbyname-2-expert-queue-internal - 0"
-    - "malc0de-parser-queue - 0"
-    - "malc0de-parser-queue-internal - 0"
     - "spamhaus-drop-parser-queue - 0"
     - "spamhaus-drop-parser-queue-internal - 0"
     - "taxonomy-expert-queue - 0"
