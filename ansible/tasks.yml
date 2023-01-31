@@ -17,11 +17,6 @@
     msg: IntelMQ Version {{ intelmq_version }} and IntelMQ Major Version {{ intelmq_major_version }}
 
 
-- name: Run configuration upgrade
-  command: intelmqctl upgrade-config -u v300_pipeline_file_removal -f
-  when:
-    intelmq_major_version == '3'
-
 # CLI related tests
 #
 # Those tests run intelmqctl

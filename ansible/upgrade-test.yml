@@ -19,14 +19,10 @@
       with_items:
       - intelmq-manager
       - intelmq
-    - name: Copy runtime.conf
+    - name: Copy runtime.yaml
       copy:
-        src: 'assets/runtime.conf'
-        dest: '/etc/intelmq/runtime.conf'
-    - name: Copy pipeline.conf
-      copy:
-        src: 'assets/pipeline.conf'
-        dest: '/etc/intelmq/pipeline.conf'
+        src: 'assets/runtime.yaml'
+        dest: '/etc/intelmq/runtime.yaml'
     - name: Make sure redis is running
       ansible.builtin.systemd:
         state: started
@@ -54,8 +50,6 @@
       with_items:
       - intelmq-manager
       - intelmq
-    - name: Run configuration upgrade
-      command: intelmqctl upgrade-config -u v300_pipeline_file_removal -f
 
 
 # CLI related tests
