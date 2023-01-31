@@ -7,12 +7,12 @@
     - name: Setup Debian
       include: debian.yml
       when: ansible_facts['distribution'] == "Debian"
-    - name: Setup Ubuntu 18.04
-      include: ubuntu_1804.yml
-      when: ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_version'] == "18.04"
     - name: Setup Ubuntu 20.04
       include: ubuntu_2004.yml
       when: ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_version'] == "20.04"
+    - name: Setup Ubuntu 22.04
+      include: ubuntu_2204.yml
+      when: ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_version'] == "22.04"
     - name: Setup CentOS
       include: centos.yml
       when: ansible_facts['distribution'] == "CentOS"
