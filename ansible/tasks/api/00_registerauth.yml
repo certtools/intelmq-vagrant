@@ -6,4 +6,5 @@
     body:
       username: admin
       password: asdf
+    follow_redirects: all
   register: auth

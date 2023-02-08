@@ -6,6 +6,12 @@
     update-cache: yes
     pkg:
       - gpg
+- name: Proceed configuring user
+  debconf:
+    name: intelmq
+    question: intelmq-api/setup
+    value: "True"
+    vtype: boolean
 - name: Set user for IntelMQ API
   debconf:
     name: intelmq-api
@@ -24,6 +30,12 @@
     question: intelmq-api/password-repeat
     value: asdf
     vtype: password
+- name: Agree to configure the DB
+  debconf:
+    name: intelmq
+    question: intelmq-api/dbconfig-install
+    value: "True"
+    vtype: boolean
 - name: Set webserver service name
   set_fact:
     webserver: apache2
