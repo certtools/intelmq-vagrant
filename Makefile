@@ -1,4 +1,4 @@
-FOLDERS := debian-bullseye ubuntu-20.04 ubuntu-22.04 upgrade-test
+FOLDERS := debian-bullseye debian-bookworm ubuntu-20.04 ubuntu-22.04 upgrade-test
 RM	:= rm -f
 
 .PHONY: $(FOLDERS) clean
