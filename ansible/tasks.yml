@@ -22,7 +22,7 @@
 # Those tests run intelmqctl
 #
 - name: Run CLI tests
-  include: "{{ item }}"
+  include_tasks: "{{ item }}"
   loop: "{{ query('fileglob', 'tasks/cli/*.yml') | sort }}"
 
 # API related tests
@@ -31,7 +31,7 @@
 # Most of them depend on the 00_registerauth.yml task that provides the authentication token
 #
 - name: Run API tests
-  include: "{{ item }}"
+  include_tasks: "{{ item }}"
   loop: "{{ query('fileglob', 'tasks/api/*.yml') | sort }}"
   when: not ci | bool
 
@@ -40,6 +40,6 @@
 # Those tests access the intelmq-manager webinterface
 #
 - name: Run Manager tests
-  include: "{{ item }}"
+  include_tasks: "{{ item }}"
   loop: "{{ query('fileglob', 'tasks/manager/*.yml') | sort }}"
   when: not ci | bool

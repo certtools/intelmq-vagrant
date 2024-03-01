@@ -2,19 +2,19 @@
   become: yes
   tasks:
     - name: Prepare Debian and Ubuntu
-      include: debian_based.yml
+      import_tasks: debian_based.yml
       when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu"
     - name: Setup Debian
-      include: debian.yml
+      import_tasks: debian.yml
       when: ansible_facts['distribution'] == "Debian"
     - name: Setup Ubuntu 20.04
-      include: ubuntu_2004.yml
+      import_tasks: ubuntu_2004.yml
       when: ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_version'] == "20.04"
     - name: Setup Ubuntu 22.04
-      include: ubuntu_2204.yml
+      import_tasks: ubuntu_2204.yml
       when: ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_version'] == "22.04"
     - name: Setup CentOS
-      include: centos.yml
+      import_tasks: centos.yml
       when: ansible_facts['distribution'] == "CentOS"
     - name: Install IntelMQ packages
       package:
@@ -24,7 +24,7 @@
       - intelmq-api
       - intelmq
     - name: Setup CentOS
-      include: centos_postinstall.yml
+      import_tasks: centos_postinstall.yml
       when: ansible_facts['distribution'] == "CentOS"
     - name: Copy runtime.yaml
       copy:
@@ -43,4 +43,4 @@
         name: "{{webserver}}"
 
     - name: Run tasks
-      include: "tasks.yml"
+      import_tasks: "tasks.yml"
