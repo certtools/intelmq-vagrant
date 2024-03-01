@@ -1,7 +1,7 @@
 - name: Register auth
-  uri:
-    url: http://localhost/intelmq/v1/api/login/
-    body_format: json
+  ansible.builtin.uri:
+    url: http://localhost/intelmq/v1/api/login
+    body_format: form-urlencoded
     method: POST
     body:
       username: admin

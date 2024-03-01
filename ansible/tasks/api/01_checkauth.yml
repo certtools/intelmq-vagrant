@@ -5,4 +5,4 @@
   register: queuesnoauth
 - name: Check if authentication works
   assert:
-    that: "'{\"errors\": {\"Authentication Required\": \"Please provide valid Token verification credentials\"}}' in queuesnoauth.content"
+    that: "'{\"error\":{\"Authentication Required\":\"Please provide valid Token verification credentials\"}}' in queuesnoauth.content"
