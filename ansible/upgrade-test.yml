@@ -2,7 +2,7 @@
   become: yes
   tasks:
     - name: Prepare Debian and Ubuntu
-      include: debian_based.yml
+      import_tasks: debian_based.yml
       when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu"
     # First we install from stable
     - name: Add apt key
@@ -57,7 +57,7 @@
 # Those tests run intelmqctl
 #
     - name: Run CLI tests
-      include: "{{ item }}"
+      include_tasks: "{{ item }}"
       loop: "{{ query('fileglob', 'tasks/cli/*.yml') | sort }}"
 
 # API related tests
@@ -66,7 +66,7 @@
 # Most of them depend on the 00_registerauth.yml task that provides the authentication token
 #
     - name: Run API tests
-      include: "{{ item }}"
+      include_tasks: "{{ item }}"
       loop: "{{ query('fileglob', 'tasks/api/*.yml') | sort }}"
 
 # Manager related tests
@@ -74,5 +74,5 @@
 # Those tests access the intelmq-manager webinterface
 #
     - name: Run Manager tests
-      include: "{{ item }}"
+      include_tasks: "{{ item }}"
       loop: "{{ query('fileglob', 'tasks/manager/*.yml') | sort }}"
