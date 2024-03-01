@@ -3,7 +3,7 @@
   register: intelmqctllistbots
 - name: Check output of intelmqctl list bots (--configured)
   assert:
-    that: "{{ lookup('file', 'assets/list_bots_json') | from_json }} == {{ intelmqctllistbots.stdout | from_json }}"
+    that: "( lookup('file', 'assets/list_bots_json') | from_json ) == ( intelmqctllistbots.stdout | from_json )"
 
 # for the listing of all bots we don't compare the output,
 # because it would change anytime a new bot is added

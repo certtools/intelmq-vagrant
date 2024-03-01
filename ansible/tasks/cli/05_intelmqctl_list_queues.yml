@@ -4,7 +4,7 @@
 - name: Check output of intelmqctl list queues
   fail:
     msg: 'The line "{{ line }}" is missing.'
-  when: '"{{ line }}" not in "{{ intelmqctllistqueues.stdout_lines }}"'
+  when: line not in intelmqctllistqueues.stdout_lines
   loop:
     - "cymru-whois-expert-queue - 0"
     - "cymru-whois-expert-queue-internal - 0"

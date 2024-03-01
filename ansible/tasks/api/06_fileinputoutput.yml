@@ -63,10 +63,12 @@
   # The output of the slurp command apparently gets parsed as a python dict, so we can't just
   # compare the string. Therefore there are multiple asserts:
     that: 
-      - "{{ events['content'] | b64decode }}['extra.file_name'] == 'api_06_fileinputoutput.txt'"
-      - "{{ events['content'] | b64decode }}['feed.accuracy'] == 100.0"
-      - "{{ events['content'] | b64decode }}['feed.url'] == 'file://localhost/assets/api_06_fileinputoutput.txt'"
-      - "'time.observation' in  {{ events['content'] | b64decode }}"
+      - "decoded_content['extra.file_name'] == 'api_06_fileinputoutput.txt'"
+      - "decoded_content['feed.accuracy'] == 100.0"
+      - "decoded_content['feed.url'] == 'file://localhost/assets/api_06_fileinputoutput.txt'"
+      - "'time.observation' in decoded_content"
+  vars:
+    decoded_content: "{{ events['content'] | b64decode }}"
 
 - name: Clean up file-output files
   file:
